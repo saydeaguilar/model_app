@@ -6,6 +6,8 @@ import io
 import json
 import pandas as pd
 from datetime import datetime
+import os
+
 
 
 def main():
@@ -154,7 +156,7 @@ def get_prediction(tabular_data, image_array):
     # Convert payload to JSON-formatted string
     payload_json = json.dumps(payload)
 
-    client = boto3.client('sagemaker-runtime', 'us-east-1', aws_access_key_id="AKIAQ3EGSGTMTNCHW35C", aws_secret_access_key="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")
+    client = boto3.client('sagemaker-runtime', 'us-east-1', aws_access_key_id=st.secrets["aws_access_key_id"], aws_secret_access_key=st.secrets["aws_secret_access_key"])
 
     # Make the request
     response = client.invoke_endpoint(
