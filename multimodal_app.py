@@ -86,7 +86,7 @@ def preprocess_tabular_data(column_names, tabular_data):
     reference_date = datetime.strptime('2019-02-27', '%Y-%m-%d')
 
     # Calculate days since reference date
-    tabular_data_df['days_since'] = (tabular_data_df['date'] - reference_date).dt.days
+    tabular_data_df['days_since'] = (reference_date - tabular_data_df['date']).dt.days
     tabular_data_df = tabular_data_df.drop('wsg', axis=1)
     tabular_data_df = tabular_data_df.drop('date', axis=1)
 
