@@ -160,7 +160,7 @@ def get_prediction(tabular_data, image_array):
 
     # Make the request
     response = client.invoke_endpoint(
-        EndpointName=st.secrets["endpoint_name "], 
+        EndpointName=st.secrets["endpoint_name"], 
         ContentType="application/json",  # Use application/json content type
         Body=payload_json.encode('utf-8')  # Encode the JSON string to bytes
     )
