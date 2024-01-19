@@ -16,7 +16,7 @@ def main():
 
     # Get tabular data from user input
     class_options = [
-        "flower", "mountain", "cake", "boat", "cat", "dog", "airplane", "person", "llama", "cartoon"
+        "flower", "mountain", "cake", "boat", "cat", "dog", "airplane", "person", "llama", "cartoon", "other"
     ]
     image_class = st.selectbox("Select image class:", class_options)
     date = st.text_input("Enter date:", "2024/01/11")
@@ -88,25 +88,9 @@ def preprocess_tabular_data(column_names, tabular_data):
 
     # Calculate days since reference date
     tabular_data_df['days_since'] = (reference_date - tabular_data_df['date']).dt.days
-    tabular_data_df = tabular_data_df.drop('wsg', axis=1)
-    tabular_data_df = tabular_data_df.drop('date', axis=1)
+    
 
-    # Get boolean columns 
-    bool_columns = ['baz', 'fyt', 'lgh']
-    tabular_data_df[bool_columns] = tabular_data_df[bool_columns].replace({'True': True, 'False': False})
-    tabular_data_df[bool_columns] = tabular_data_df[bool_columns].astype(int)
 
-    # Specify all possible classes
-    all_classes = ['airplane', 'boat', 'cake', 'cartoon', 'cat', 'dog', 'flower', 'llama', 'mountain', 'person']
-
-    # Add columns for all possible classes with zeros
-    tabular_data_df = pd.concat([tabular_data_df, pd.DataFrame(0, index=tabular_data_df.index, columns=all_classes)], axis=1)
-
-    # Update the relevant column based on the "image_class"
-    tabular_data_df.loc[tabular_data_df.index, tabular_data_df['image_class']] = 1
-
-    # Drop the original "image_class" column
-    tabular_data_df.drop('image_class', axis=1, inplace=True)
 
     # Convert columns to float
     columns_to_convert = ["bar", "xgt", "qgg", "lux", "yyz", "drt", "gox", "foo", "boz", "hrt", "juu"]
@@ -126,15 +110,19 @@ def preprocess_tabular_data(column_names, tabular_data):
     'foo': {'min': -5.853642, 'max': 66.001361},
     'boz': {'min': 0.023978, 'max': 103.649905},
     'hrt': {'min': -735.738392, 'max': 266.571596},
-    'juu': {'min': 0.473126, 'max': 866.895515},
+    'juu': {'min': 0.473126, 'max': 866.895515},  
+    'days_since': {'min': 0.0000, 'max': 1093.0000},
     }
 
     # Extract the columns to normalize
-    columns_to_normalize = ['bar', 'xgt', 'qgg', 'lux', 'yyz', 'drt', 'gox', 'foo', 'boz', 'hrt', 'juu']
+    columns_to_normalize = ['bar', 'xgt', 'qgg', 'lux', 'yyz', 'drt', 'gox', 'foo', 'boz', 'hrt', 'juu','days_since']
 
     # Normalize the columns
     for col in columns_to_normalize:
         tabular_data_df[col] = (tabular_data_df[col] - min_max_dict[col]['min']) / (min_max_dict[col]['max'] - min_max_dict[col]['min'])
+    
+    selected_features = ['yyz', 'gox', 'days_since', 'xgt', 'qgg']
+    tabular_data_df =tabular_data_df[selected_features]
 
     tabular_data_np_array = tabular_data_df.values
 
@@ -143,6 +131,8 @@ def preprocess_tabular_data(column_names, tabular_data):
 def get_prediction(tabular_data, image_array):
     # Convert tabular_data to a list
     tabular_data_list = tabular_data[0].tolist()
+
+    print(tabular_data_list)
 
     #tabular_data_list = [ 0.0591344237615152, 1, 0.5588512085211652, 0.2219173855814699, 0.8597296204618212, 0.3144921888322008, 0.9999874100782428, 0.1361326506474088, 0.4262547610601505, 0.0005181880377691, 1, 0, 0.590296209079183, 0.4241634480512994, 0.967978042086002, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0]
     
