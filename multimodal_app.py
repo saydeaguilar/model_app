@@ -140,7 +140,7 @@ def get_prediction(tabular_data, image_array):
     print(tabular_data_list)
     payload = {
         "instances": [
-            {"input_1": tabular_data_list, "input_2": image_array.tolist()}
+            {"input_3": tabular_data_list, "input_4": image_array.tolist()}
         ]
     }
 
